@@ -9,7 +9,7 @@ const client = new Discord.Client();
 let isAwake = false;
 
 // Array of Friday songs for good vibes
-const fridaySongs = [];
+let fridaySongs = [];
 fridaySongs.push(
     'https://youtu.be/qijBzcteR9Y', 'https://youtu.be/XQCz96er7ns', 
     'https://youtu.be/MEIRNj0EmH0', 'https://youtu.be/K7l5ZeVVoCA', 
@@ -18,6 +18,10 @@ fridaySongs.push(
     'https://youtu.be/YlUKcNNmywk', 'https://youtu.be/NUTGr5t3MoY',
     'https://youtu.be/CDl9ZMfj6aE', 'https://youtu.be/sNJVFloPIVA');
 
+// Array of Raffle prizes
+let rafflePrizes = [];
+rafflePrizes.push('a horse', 'a tub filled with Mountain Dew', '14 cubics of Cheetos',
+    'Fish Sticks', '100 duck sized horses', '1 horse sized duck');
 
 // Function that determines if it is friday or not
 function isItFriday() {
@@ -64,6 +68,23 @@ client.on('message', msg => {
                 msg.reply('Song successfully added');
             }
         }
+        
+        // Raffle functionality
+        else if (msg.content == `${prefix}raffle`) {
+            const randomPrize = rafflePrizes[Math.floor(Math.random() * rafflePrizes.length)];
+            msg.channel.send('WoooW, congratulation! You won ' + randomPrize + "!");
+        }
+        else if (msg.content.startsWith(`${prefix}addprize `)) {
+            let prize = msg.content.slice(10);
+            if (rafflePrizes.includes(prize)) {
+                msg.reply('Sorry, ' + prize + ' already exist in our catalogue.');
+            }
+            else {
+                rafflePrizes.push(prize);
+                msg.reply(prize + ' has been successfully added to the catalogue of prizes.')
+                console.log(rafflePrizes)
+            }
+        }
 
         // Google search functionality
         else if (msg.content.startsWith(`${prefix}g `)) {
@@ -96,6 +117,7 @@ client.on('message', msg => {
                 'Commands: \n\t' + prefix + 'friday : Provides a random friday song if called on a friday.\n' +
                 '\t' + prefix + 'addfriday [link] : Adds a given youtube link to the collection of friday songs. \n' +
                 '\t' + prefix + 'g [search query] : Returns a URL for the search query on Google.com.\n' +
+                '\t' + prefix + 'raffle : Play the raffle and maybe win an exciting gift!' +
                 '\t' + prefix + 'week : Returns the current week number. Notoriously hard to grasp\n' +
                 '\t' + prefix + 'server : Returns information about the current server.\n' +
                 '\t' + prefix + 'user-info : Returns information about the user that typed the command.\n\n' +
