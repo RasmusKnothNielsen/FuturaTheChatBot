@@ -1,0 +1,31 @@
+{
+  "name": "futurathechatbot",
+  "version": "1.0.0",
+  "description": "Futura is a Discord chatbot that provides therapeutic consultation, friday songs and other various services such as google searches",
+  "main": "Futura.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RasmusKnothNielsen/FuturaTheChatBot.git"
+  },
+  "keywords": [
+    "Futura",
+    "ChatBot",
+    "Bot",
+    "Friday",
+    "Songs",
+    "Discord",
+    "ELIZA"
+  ],
+  "author": "Rasmus Knoth Nielsen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/RasmusKnothNielsen/FuturaTheChatBot/issues"
+  },
+  "homepage": "https://github.com/RasmusKnothNielsen/FuturaTheChatBot#readme",
+  "dependencies": {
+    "discord.js": "^12.0.2"
+  }
+}
