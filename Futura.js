@@ -117,7 +117,8 @@ client.on('message', msg => {
                 'Commands: \n\t' + prefix + 'friday : Provides a random friday song if called on a friday.\n' +
                 '\t' + prefix + 'addfriday [link] : Adds a given youtube link to the collection of friday songs. \n' +
                 '\t' + prefix + 'g [search query] : Returns a URL for the search query on Google.com.\n' +
-                '\t' + prefix + 'raffle : Play the raffle and maybe win an exciting gift!' +
+                '\t' + prefix + 'raffle : Play the raffle and maybe win an exciting gift!\n' +
+                '\t' + prefix + 'addprize [prize] : Add a new prize to the raffle.\n' + 
                 '\t' + prefix + 'week : Returns the current week number. Notoriously hard to grasp\n' +
                 '\t' + prefix + 'server : Returns information about the current server.\n' +
                 '\t' + prefix + 'user-info : Returns information about the user that typed the command.\n\n' +
