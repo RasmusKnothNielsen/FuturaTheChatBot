@@ -1,9 +1,13 @@
 const futura = require('./ELIZA/Eliza-bot.js');
 // require the discord.js module
 const Discord = require('discord.js');
+// require http to be able to parse http pages for google searches
+var http = require('http');
 // Importing constfix and token
 const { prefix, token } = require('./config.json');
 const client = new Discord.Client();
+
+const request = require('request');
 
 // Enable/Disable Futura
 let isAwake = false;
@@ -100,6 +104,51 @@ client.on('message', msg => {
                 });
               });
         }
+        // Testing out if it is possible to retrieve top hit on google
+        else if (msg.content.startsWith(`${prefix}google `)) {
+            let lookup = msg.content.slice(8);
+            // Replace every space with a plus sign
+            lookup = lookup.replace(/ /g, '+');
+            console.log(lookup)
+            const newlookup = 'http://www.google.com/search?source=hp&ei=mFopW5aMIomSsAfRw77IDg&q=' + lookup;
+            console.log(newlookup);
+            http.get(newlookup, onGotData);
+            function onGotData(res) {
+                var chunks = [];
+                res.on('data', onGotData);
+                res.on('end', onEnd);
+                function onGotData(chunk) {
+                    chunks.push(chunk);
+                }
+                function onEnd() {
+                    console.log(chunks.join(''));
+                }
+            }
+        }
+
+        // Wiki search functionality
+        else if (msg.content.startsWith(`${prefix}wiki `)) {
+            let lookup = msg.content.slice(6);
+            lookup = lookup.replace(/ /g, '+');
+            console.log(lookup);
+            const newlookup = `http://en.wikipedia.org/w/api.php?action=query&list=search&prop=info&inprop=url&utf8=&format=json&origin=*&srlimit=20&srsearch=${lookup}&prop=info&inprop=url`;
+            // Get the JSON with results, and extract query -> search -> 0 -> pageid
+            // and concatenate this with https://en.wikipedia.org/?curid= before returning it to user
+            let options = {json: true};
+            
+            request(newlookup, options, (error, res, body) => {
+                if (error) {
+                    return  console.log(error)
+                };
+
+                if (!error && res.statusCode == 200) {
+                    // do something with JSON, using the 'body' variable
+                    const pageid = body.query.search[0].pageid;
+                    msg.reply(`https://en.wikipedia.org/?curid=${pageid}`)
+                };
+            });
+            
+        }
 
         // Meta information functionality
         else if (msg.content === `${prefix}week`) {
@@ -117,6 +166,7 @@ client.on('message', msg => {
                 'Commands: \n\t' + prefix + 'friday : Provides a random friday song if called on a friday.\n' +
                 '\t' + prefix + 'addfriday [link] : Adds a given youtube link to the collection of friday songs. \n' +
                 '\t' + prefix + 'g [search query] : Returns a URL for the search query on Google.com.\n' +
+                '\t' + prefix + 'wiki [search query] : Returns a direct link to the apropriate Wiki article.\n' +
                 '\t' + prefix + 'raffle : Play the raffle and maybe win an exciting gift!\n' +
                 '\t' + prefix + 'addprize [prize] : Add a new prize to the raffle.\n' + 
                 '\t' + prefix + 'week : Returns the current week number. Notoriously hard to grasp\n' +
