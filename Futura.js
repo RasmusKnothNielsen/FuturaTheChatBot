@@ -93,7 +93,7 @@ client.on('message', msg => {
         // Google search functionality
         else if (msg.content.startsWith(`${prefix}g `)) {
             let lookup = msg.content.slice(3);
-            lookup = lookup.replace(' ', '+');
+            lookup = lookup.replace(/ /g, '+');
             const newlookup = 'https://www.google.com/search?source=hp&ei=mFopW5aMIomSsAfRw77IDg&q=' + lookup;
             msg.channel.send('<a:googling:426453223310622740> Loading...').then(message => {
                 google(lookup, (err) => {
@@ -104,6 +104,35 @@ client.on('message', msg => {
                 });
               });
         }
+
+        /*
+        // Stack Overflow functionality
+        else if (msg.content.startsWith(`${prefix}SO `)) {
+            let searchtext = msg.content.slice(4);
+            searchtext = searchtext.replace(/ /g, '+');
+            const lookup = 'https://api.stackexchange.com/2.2/search?order=desc&sort=activity&intitle=' + searchtext + '&site=stackoverflow';
+            let options = {json: true};
+            
+            request(lookup, options, (error, res, body) => {
+                if (error) {
+                    return  console.log(error)
+                };
+
+                if (!error && res.statusCode == 200) {
+                    // do something with JSON, using the 'body' variable
+                    body = JSON.parse(body);
+                    console.log(body[10])
+                    url = [];
+                    for (let key in body) {
+                        console.log('Index is: ' + key + '\nDescription is:  ' + body[key]);
+                    }
+                    msg.reply("")
+                };
+            });
+
+        }
+        */
+
         // Testing out if it is possible to retrieve top hit on google
         else if (msg.content.startsWith(`${prefix}google `)) {
             let lookup = msg.content.slice(8);
@@ -167,15 +196,23 @@ client.on('message', msg => {
                 '\t' + prefix + 'addfriday [link] : Adds a given youtube link to the collection of friday songs. \n' +
                 '\t' + prefix + 'g [search query] : Returns a URL for the search query on Google.com.\n' +
                 '\t' + prefix + 'wiki [search query] : Returns a direct link to the apropriate Wiki article.\n' +
+                '\t' + prefix + 'SO [search query] : Returns a direct link to the first Stack Overflow question with an accepted answer.\n' +
                 '\t' + prefix + 'raffle : Play the raffle and maybe win an exciting gift!\n' +
                 '\t' + prefix + 'addprize [prize] : Add a new prize to the raffle.\n' + 
                 '\t' + prefix + 'week : Returns the current week number. Notoriously hard to grasp\n' +
                 '\t' + prefix + 'server : Returns information about the current server.\n' +
                 '\t' + prefix + 'user-info : Returns information about the user that typed the command.\n\n' +
                 'General therapy: \n\t "Hi Futura" : Starts the conversation with Futura.\n' +
-                '\t "Bye Futura" : Ends the conversation with Futura.')
+                '\t "Bye Futura" : Ends the conversation with Futura.\n' +
+                'If you would just like a casual conversation, you can do that by tagging her name in your message.\n' +
+                '\tEx: "What are you doing, @Futura?"')
         }
 
+    }
+
+    // If users tags Futura in their message
+    else if (msg.content.includes("687582372610441223")) {
+        msg.reply(futura.reply(msg.content));
     }
 
     // Block of code being used when the user want some therapeutic consultation
@@ -189,7 +226,7 @@ client.on('message', msg => {
             isAwake = false;
             msg.reply(futura.bye());
         }
-        else if (msg.content && !msg.author.bot && isAwake) {
+        else if (msg.content.contains && !msg.author.bot && isAwake) {
             msg.reply(futura.reply(msg.content));
         }
 
