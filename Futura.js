@@ -2,7 +2,9 @@ const futura = require('./ELIZA/Eliza-bot.js');
 // require the discord.js module
 const Discord = require('discord.js');
 // require http to be able to parse http pages for google searches
-var http = require('http');
+let http = require('http');
+// require fs to be able to read and write data files
+let fs = require('fs');
 // Importing constfix and token
 const { prefix, token } = require('./config.json');
 const client = new Discord.Client();
@@ -13,21 +15,12 @@ const request = require('request');
 let isAwake = false;
 
 // Array of Friday songs for good vibes
-let fridaySongs = [];
-fridaySongs.push(
-    'https://youtu.be/qijBzcteR9Y', 'https://youtu.be/XQCz96er7ns', 
-    'https://youtu.be/MEIRNj0EmH0', 'https://youtu.be/K7l5ZeVVoCA', 
-    'https://youtu.be/h61QG4s0I3U', 'https://youtu.be/ZRqSuRn9Obw',
-    'https://youtu.be/SYnVYJDxu2Q', 'https://youtu.be/dQw4w9WgXcQ',
-    'https://youtu.be/YlUKcNNmywk', 'https://youtu.be/NUTGr5t3MoY',
-    'https://youtu.be/CDl9ZMfj6aE', 'https://youtu.be/sNJVFloPIVA',
-    'https://youtu.be/uVPoGMu3LQo', 'https://youtu.be/mDFBTdToRmw',
-    'https://youtu.be/pe3QHDbkeU4', 'https://youtu.be/6UzP4QPA5Kg');
+let fridaySongs = []
+readFile('./data/songs.txt', fridaySongs);
 
 // Array of Raffle prizes
 let rafflePrizes = [];
-rafflePrizes.push('a horse', 'a tub filled with Mountain Dew', '14 cubics of Cheetos',
-    'Fish Sticks', '100 duck sized horses', '1 horse sized duck');
+readFile('./data/prizes.txt', rafflePrizes);
 
 // Function that determines if it is friday or not
 function isItFriday() {
@@ -55,7 +48,7 @@ client.on('message', msg => {
 
         // Friday song functionality
         if (msg.content === `${prefix}friday`)  {
-            if (isItFriday()) {
+            if (!isItFriday()) {
                 const randomSong = fridaySongs[Math.floor(Math.random() * fridaySongs.length)];
                 msg.channel.send(randomSong);
             }
@@ -70,6 +63,7 @@ client.on('message', msg => {
             }
             else {
                 fridaySongs.push(url);
+                writeFile('./data/songs.txt', fridaySongs);
                 console.log(fridaySongs)
                 msg.reply('Song successfully added');
             }
@@ -87,8 +81,8 @@ client.on('message', msg => {
             }
             else {
                 rafflePrizes.push(prize);
+                writeFile('./data/prizes.txt', rafflePrizes);
                 msg.reply(prize + ' has been successfully added to the catalogue of prizes.')
-                console.log(rafflePrizes)
             }
         }
 
@@ -234,6 +228,28 @@ client.on('message', msg => {
 
     }
 });
+
+function readFile(path, array) {
+    fs.readFile(path, 'utf8', (error, data) => {
+        if (error) {
+            console.log(error);
+        }
+        let newArray = data.split(',');
+        newArray.map((str) => {
+            array.push(str);
+        });
+    })
+}
+function writeFile(path, array) {
+    fs.writeFile(path, array, (error) => {
+        if (error) {
+            console.log('An error occured when trying to read to file ', path);
+        }
+        else {
+            console.log('Data saved to file ', path);
+        }
+    })
+}
 
 // login to Discord with your app's token
 client.login(token);
