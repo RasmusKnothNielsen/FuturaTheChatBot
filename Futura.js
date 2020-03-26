@@ -48,7 +48,7 @@ client.on('message', msg => {
 
         // Friday song functionality
         if (msg.content === `${prefix}friday`)  {
-            if (!isItFriday()) {
+            if (isItFriday()) {
                 const randomSong = fridaySongs[Math.floor(Math.random() * fridaySongs.length)];
                 msg.channel.send(randomSong);
             }
