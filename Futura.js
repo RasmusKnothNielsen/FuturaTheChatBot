@@ -10,6 +10,7 @@ const { prefix, token } = require('./config.json');
 const client = new Discord.Client();
 
 const request = require('request');
+const zlib = require('zlib');
 
 // Enable/Disable Futura
 let isAwake = false;
@@ -101,33 +102,37 @@ client.on('message', msg => {
               });
         }
 
-        /*
+        
         // Stack Overflow functionality
         else if (msg.content.startsWith(`${prefix}SO `)) {
             let searchtext = msg.content.slice(4);
             searchtext = searchtext.replace(/ /g, '+');
-            const lookup = 'https://api.stackexchange.com/2.2/search?order=desc&sort=activity&intitle=' + searchtext + '&site=stackoverflow';
+            const newlookup = 'https://api.stackexchange.com/2.2/search?order=desc&sort=activity&intitle=' + searchtext + '&site=stackoverflow';
+            console.log(newlookup);
+
             let options = {json: true};
             
-            request(lookup, options, (error, res, body) => {
-                if (error) {
-                    return  console.log(error)
-                };
+            request(
+                { method: 'GET'
+                , uri: newlookup
+                , gzip: true
+                }
+              , function (error, response, body) {
 
-                if (!error && res.statusCode == 200) {
-                    // do something with JSON, using the 'body' variable
-                    body = JSON.parse(body);
-                    console.log(body[10])
-                    url = [];
-                    for (let key in body) {
-                        console.log('Index is: ' + key + '\nDescription is:  ' + body[key]);
-                    }
-                    msg.reply("")
-                };
-            });
-
+                  let newBody = JSON.parse(body)
+                  console.log(newBody.items);
+                  const arrayOfAnswers = newBody.items;
+                  let arrayOfAnsweredQuestions = []
+                  arrayOfAnswers.forEach(answer => {
+                      if (answer.is_answered) {
+                          arrayOfAnsweredQuestions.push(answer.link)
+                      }
+                  });
+                  msg.reply(arrayOfAnsweredQuestions[0]);
+                }
+              )
         }
-        */
+        
 
         // Testing out if it is possible to retrieve top hit on google
         else if (msg.content.startsWith(`${prefix}google `)) {
@@ -157,6 +162,7 @@ client.on('message', msg => {
             lookup = lookup.replace(/ /g, '+');
             console.log(lookup);
             const newlookup = `http://en.wikipedia.org/w/api.php?action=query&list=search&prop=info&inprop=url&utf8=&format=json&origin=*&srlimit=20&srsearch=${lookup}&prop=info&inprop=url`;
+            console.log(newlookup)
             // Get the JSON with results, and extract query -> search -> 0 -> pageid
             // and concatenate this with https://en.wikipedia.org/?curid= before returning it to user
             let options = {json: true};
