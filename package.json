@@ -1,6 +1,6 @@
 {
   "name": "futurathechatbot",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Futura is a Discord chatbot that provides therapeutic consultation, friday songs and other various services such as google searches",
   "main": "Futura.js",
   "scripts": {

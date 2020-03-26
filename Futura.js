@@ -185,6 +185,9 @@ client.on('message', msg => {
         else if (msg.content === `${prefix}week`) {
             msg.reply('We are currently in week ' + getWeekDay() + ".");
         }
+        else if (msg.content === `${prefix}source`) {
+            msg.reply('https://github.com/RasmusKnothNielsen/FuturaTheChatBot');
+        }
         else if (msg.content === `${prefix}server`) {
             msg.channel.send(`Server name: ${msg.guild.name}\nTotal members: ${msg.guild.memberCount}\nGenesis: ${msg.guild.createdAt}\nLocation: ${msg.guild.region}`);
         }
@@ -198,16 +201,18 @@ client.on('message', msg => {
                 '\t' + prefix + 'addfriday [link] : Adds a given youtube link to the collection of friday songs. \n' +
                 '\t' + prefix + 'g [search query] : Returns a URL for the search query on Google.com.\n' +
                 '\t' + prefix + 'wiki [search query] : Returns a direct link to the apropriate Wiki article.\n' +
-                '\t' + prefix + 'SO [search query] : Returns a direct link to the first Stack Overflow question with an accepted answer.\n' +
                 '\t' + prefix + 'raffle : Play the raffle and maybe win an exciting gift!\n' +
                 '\t' + prefix + 'addprize [prize] : Add a new prize to the raffle.\n' + 
                 '\t' + prefix + 'week : Returns the current week number. Notoriously hard to grasp\n' +
+                '\t' + prefix + 'source : Returns the github repository containing the code for the bot.\n' +
                 '\t' + prefix + 'server : Returns information about the current server.\n' +
                 '\t' + prefix + 'user-info : Returns information about the user that typed the command.\n\n' +
                 'General therapy: \n\t "Hi Futura" : Starts the conversation with Futura.\n' +
                 '\t "Bye Futura" : Ends the conversation with Futura.\n' +
                 'If you would just like a casual conversation, you can do that by tagging her name in your message.\n' +
-                '\tEx: "What are you doing, @Futura?"')
+                '\tEx: "What are you doing, @Futura?"\n\n' +
+                'Beta testing:\n\t' + prefix + 'SO [search query] : Returns a direct link to the first Stack Overflow question with an accepted answer.\n'
+                )
         }
 
     }
