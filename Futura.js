@@ -133,7 +133,7 @@ client.on('message', msg => {
               )
         }
         
-
+        /*
         // Testing out if it is possible to retrieve top hit on google
         else if (msg.content.startsWith(`${prefix}google `)) {
             let lookup = msg.content.slice(8);
@@ -155,6 +155,7 @@ client.on('message', msg => {
                 }
             }
         }
+        */
 
         // Wiki search functionality
         else if (msg.content.startsWith(`${prefix}wiki `)) {
